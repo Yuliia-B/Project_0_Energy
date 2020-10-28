@@ -13,3 +13,25 @@ library(imputeTS)
 > stl(tsInput_Data4season [,1], t.window=13, s.window=12, robust=TRUE)
 > perem <- stl(tsInput_Data4season [,1], t.window=13, s.window=12, robust=TRUE)
 > plot (perem)
+> ETS <- forecast(ets(tsInput_Data4mid), h=12)
+> ETS <- forecast(ets(tsInput_Data4mid), h=12)
+> STL <-stlf(tsInput_Data4mid, lambda=0, h=12, biasadj=TRUE)
+> ARIMA <- forecast(auto.arima(tsInput_Data4mid, lambda=0, biasadj=TRUE),h=12)
+> NNAR <- forecast(nnetar(tsInput_Data4mid), h=12)
+> TBATS <- forecast(tbats(tsInput_Data4mid, biasadj=TRUE), h=12)
+> Combination <-(ETS[["mean"]] + ARIMA[["mean"]] + STL[["mean"]] +
+                   +                    NNAR[["mean"]] + TBATS[["mean"]])/5
+> theme_set(theme_light(base_size = 16))
+> autoplot(tsInput_Data4mid, linetype = "dashed") +
+  + autolayer(ETS, series="ETS", PI=FALSE) +
+  + autolayer(ARIMA, series="ARIMA", PI=FALSE) +
+  + autolayer(STL, series="STL", PI=FALSE) +
+  + autolayer(NNAR, series="NNAR", PI=FALSE) +
+  + autolayer(TBATS, series="TBATS", PI=FALSE) +
+  + autolayer(Combination, series="Combination") +
+  +xlab("Рік")
++ ylab("Імпорт електроенергії Україною")
++guides(colour=guide_legend(title=""))
++ scale_x_continuous(expand = c(0, 0))
++ scale_y_continuous(expand = c(0, 0))
++ scale_x_continuous(breaks= seq(2008, 2021, 2))
